@@ -1,15 +1,16 @@
 #!/bin/bash
 
-set -e
+echo "Job started: $(date)";
 
-echo "Job started: $(date)"
+mongodump -h $MONGO_HOST -p $MONGO_PORT -d $MONGO_DB --archive > /backup/`date +%Y-%m-%dT%H-%M-%S`.tgz
 
-DATE=$(date +%Y%m%d_%H%M%S)
-FILE="/backup/backup-$DATE.tar.gz"
+lines=$(ls -1 -t -d /backup/* | tail -n +$NB_FILES | wc -l)
+if [ "$lines" -gt "0" ]
+then
+    ls -1 -t -d /backup/* | tail -n +$NB_FILES | xargs rm --
+fi
 
-mkdir -p dump
-mongodump -h $MONGO_HOST -p $MONGO_PORT
-tar -zcvf $FILE dump/
-rm -rf dump/
+echo "Available backups:"
+ls -1 -t -d /backup/*
 
 echo "Job finished: $(date)"

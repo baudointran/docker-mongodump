@@ -1,5 +1,5 @@
 FROM mongo:3.4
-MAINTAINER Ilya Stepanov <dev@ilyastepanov.com>
+LABEL maintainer="Julien Riel"
 
 RUN apt-get update && \
     apt-get install -y cron && \
